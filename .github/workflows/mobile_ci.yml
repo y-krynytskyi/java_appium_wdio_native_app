@@ -42,14 +42,13 @@ jobs:
           arch: x86_64
           profile: Nexus 6
           script: |
-            # FIX: Adding -e and -X for logging.
-            # FIX: Adding specific timeout capabilities for slow CI environments.
-            mvn clean test \
-              -Dplatform=ANDROID \
-              -DsuiteXmlFile=src/test/resources/testng.xml \
-              -Dappium:uiautomator2ServerInstallTimeout=60000 \
-              -Dappium:adbExecTimeout=60000 \
-              -Dappium:wdaStartupRetries=3 \
+            # FIX: Removed the trailing backslashes to resolve the Maven 'Unknown lifecycle phase' error.
+            mvn clean test
+              -Dplatform=ANDROID
+              -DsuiteXmlFile=src/test/resources/testng.xml
+              -Dappium:uiautomator2ServerInstallTimeout=60000
+              -Dappium:adbExecTimeout=60000
+              -Dappium:wdaStartupRetries=3
               -e -X 
 
   # ===============================================
@@ -81,10 +80,10 @@ jobs:
         run: |
           xcrun simctl boot "iPhone 16e" || true 
           
-          # FIX: Adding timeout capabilities for iOS as well, plus a retry mechanism for WDA.
-          mvn clean test \
-            -Dplatform=IOS \
-            -DsuiteXmlFile=src/test/resources/testng.xml \
-            -Dappium:wdaStartupRetries=3 \
-            -Dappium:wdaStartupRetryInterval=20000 \
+          # FIX: Removed the trailing backslashes to resolve the Maven 'Unknown lifecycle phase' error.
+          mvn clean test
+            -Dplatform=IOS
+            -DsuiteXmlFile=src/test/resources/testng.xml
+            -Dappium:wdaStartupRetries=3
+            -Dappium:wdaStartupRetryInterval=20000
             -e -X
