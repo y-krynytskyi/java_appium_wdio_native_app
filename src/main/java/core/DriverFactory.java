@@ -94,8 +94,8 @@ public class DriverFactory {
         // Capabilities based on the requested options for iOS
         XCUITestOptions options = new XCUITestOptions()
                 .setPlatformName("iOS")
-                .setDeviceName("iPhone 13") // Generic name for simulator/CI
-                .setPlatformVersion("15.4") // IMPORTANT: Change this to match your target iOS simulator version
+                .setDeviceName("iPhone 16e") // Generic name for simulator/CI
+                .setPlatformVersion("26.0") // IMPORTANT: Change this to match your target iOS simulator version
                 .setApp(getIosAppPath()) // Connects the external .app file from the 'apps' folder
                 .setBundleId(MobileConfig.IOS_BUNDLE_ID)
                 .setAutomationName("XCUITest")
