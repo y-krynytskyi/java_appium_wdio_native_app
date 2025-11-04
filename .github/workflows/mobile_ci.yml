@@ -30,7 +30,8 @@ jobs:
       - name: Install and Start Appium Server
         run: |
           npm install -g appium
-          # Start Appium in the background. MobileConfig uses 127.0.0.1:4723/wd/hub
+          # FIX 1 (CRITICAL): Install the Android driver.
+          appium driver install uiautomator2
           appium --allow-cors & 
 
       - name: Run Android Emulator and Tests
@@ -41,9 +42,8 @@ jobs:
           arch: x86_64
           profile: Nexus 6
           script: |
-            # FIX: We now filter tests using the TestNG file structure, 
-            # so we only need to pass the platform via system property for BaseTest.
-            mvn clean test -Dplatform=ANDROID -DsuiteXmlFile=src/test/resources/testng.xml 
+            # FIX: Adding -e (error messages) and -X (debug logging) to diagnose the root cause
+            mvn clean test -Dplatform=ANDROID -DsuiteXmlFile=src/test/resources/testng.xml -e -X 
 
   # ===============================================
   # JOB 2: IOS TEST EXECUTION
@@ -66,14 +66,14 @@ jobs:
       - name: Install and Start Appium Server
         run: |
           npm install -g appium
-          # Start Appium in the background.
+          # FIX 2 (CRITICAL): Install the iOS driver.
+          appium driver install xcuitest
           appium --allow-cors &
 
       - name: Run iOS Simulator and Tests
         run: |
           # FIX: Boot the simulator that closely matches DriverFactory's setting (iPhone 15 with iOS 17)
-          xcrun simctl boot "iPhone 13" || true 
+          xcrun simctl boot "iPhone 15" || true 
           
-          # FIX: We now filter tests using the TestNG file structure, 
-          # so we only need to pass the platform via system property for BaseTest.
-          mvn clean test -Dplatform=IOS -DsuiteXmlFile=src/test/resources/testng.xml
+          # FIX: Adding -e (error messages) and -X (debug logging) to diagnose the root cause
+          mvn clean test -Dplatform=IOS -DsuiteXmlFile=src/test/resources/testng.xml -e -X
