@@ -11,6 +11,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 
+import static core.MobileConfig.getAndroidAppPath;
+import static core.MobileConfig.getIosAppPath;
+
 /**
  * Factory class responsible for initializing and configuring platform-specific Appium Drivers.
  * It centralizes all driver initialization logic, using advanced Appium 2.x Options
@@ -70,7 +73,7 @@ public class DriverFactory {
         UiAutomator2Options options = new UiAutomator2Options()
                 .setPlatformName("Android")
                 .setDeviceName("emulator-5554") // Generic name for CI/Cloud integration
-                .setApp(MobileConfig.ANDROID_APP_PATH) // Connects the external .apk file from the 'apps' folder
+                .setApp(getAndroidAppPath()) // Connects the external .apk file from the 'apps' folder
                 .setAppPackage(MobileConfig.ANDROID_APP_PACKAGE)
                 .setAutomationName("UiAutomator2")
                 // CI/CD and Stability settings
@@ -91,9 +94,9 @@ public class DriverFactory {
         // Capabilities based on the requested options for iOS
         XCUITestOptions options = new XCUITestOptions()
                 .setPlatformName("iOS")
-                .setDeviceName("iPhone 16e") // Generic name for simulator/CI
-                .setPlatformVersion("26.0") // IMPORTANT: Change this to match your target iOS simulator version
-                .setApp(MobileConfig.IOS_APP_PATH) // Connects the external .app file from the 'apps' folder
+                .setDeviceName("iPhone 13") // Generic name for simulator/CI
+                .setPlatformVersion("15.4") // IMPORTANT: Change this to match your target iOS simulator version
+                .setApp(getIosAppPath()) // Connects the external .app file from the 'apps' folder
                 .setBundleId(MobileConfig.IOS_BUNDLE_ID)
                 .setAutomationName("XCUITest")
                 // CI/CD and Stability settings

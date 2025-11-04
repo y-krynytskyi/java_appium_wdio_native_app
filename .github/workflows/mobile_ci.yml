@@ -1,0 +1,79 @@
+name: Mobile Cross-Platform CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # ===============================================
+  # JOB 1: ANDROID TEST EXECUTION
+  # ===============================================
+  android_test_job:
+    name: Run Android Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Install and Start Appium Server
+        run: |
+          npm install -g appium
+          # Start Appium in the background. MobileConfig uses 127.0.0.1:4723/wd/hub
+          appium --allow-cors & 
+
+      - name: Run Android Emulator and Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: Nexus 6
+          script: |
+            # FIX: We now filter tests using the TestNG file structure, 
+            # so we only need to pass the platform via system property for BaseTest.
+            mvn clean test -Dplatform=ANDROID -DsuiteXmlFile=src/test/resources/testng.xml 
+
+  # ===============================================
+  # JOB 2: IOS TEST EXECUTION
+  # ===============================================
+  ios_test_job:
+    name: Run iOS Tests
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Install and Start Appium Server
+        run: |
+          npm install -g appium
+          # Start Appium in the background.
+          appium --allow-cors &
+
+      - name: Run iOS Simulator and Tests
+        run: |
+          # FIX: Boot the simulator that closely matches DriverFactory's setting (iPhone 15 with iOS 17)
+          xcrun simctl boot "iPhone 13" || true 
+          
+          # FIX: We now filter tests using the TestNG file structure, 
+          # so we only need to pass the platform via system property for BaseTest.
+          mvn clean test -Dplatform=IOS -DsuiteXmlFile=src/test/resources/testng.xml
