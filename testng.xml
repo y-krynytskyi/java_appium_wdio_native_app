@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<!--
+    This XML file defines two parallel test suites: one for Android and one for iOS.
+    - 'parallel="tests"' tells TestNG to run the two <test> blocks concurrently.
+    - The <parameter> tag is crucial: it passes the platform name to BaseTest.setupDriver().
+-->
+<suite name="Mobile Regression Suite" parallel="tests" thread-count="4">
+
+    <!-- ======================================================= -->
+    <!--                   ANDROID EXECUTION                     -->
+    <!-- ======================================================= -->
+    <test name="Android Login Tests">
+        <!-- Pass the required parameter 'platform' to the BaseTest -->
+        <parameter name="platform" value="ANDROID"/>
+
+        <classes>
+            <!-- Reference your platform-agnostic test file -->
+            <class name="tests.common.LoginTest"/>
+        </classes>
+    </test>
+
+    <!-- ======================================================= -->
+    <!--                      iOS EXECUTION                      -->
+    <!-- ======================================================= -->
+    <test name="iOS Login Tests">
+        <!-- Pass the required parameter 'platform' to the BaseTest -->
+        <parameter name="platform" value="IOS"/>
+
+        <classes>
+            <!-- Reference your platform-agnostic test file -->
+            <class name="tests.common.LoginTest"/>
+        </classes>
+    </test>
+
+    <!--
+        Add more suites or groups here as your framework grows (e.g., Sanity, E2E)
+    -->
+
+</suite>
